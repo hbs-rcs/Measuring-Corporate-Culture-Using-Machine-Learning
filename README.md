@@ -1,10 +1,10 @@
 # Measuring Corporate Culture Using Machine Learning
 
 ## Introduction
-The repository implements the method described in the paper 
+The repository utilize scripts implemented for the method described in the paper 
 
 Kai Li, Feng Mai, Rui Shen, Xinyan Yan, [__Measuring Corporate Culture Using Machine Learning__](https://academic.oup.com/rfs/advance-article-abstract/doi/10.1093/rfs/hhaa079/5869446?redirectedFrom=fulltext), _The Review of Financial Studies_, 2020; DOI:[10.1093/rfs/hhaa079](http://dx.doi.org/10.1093/rfs/hhaa079) 
-[[Available at SSRN]](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3256608)
+[[Available at SSRN]](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3256608) to conduct a similar analysis with completely different job posting dataset.
 
 The code is tested on Ubuntu 18.04 and macOS Catalina, with limited testing on Windows 10.  
 
@@ -12,7 +12,7 @@ The code is tested on Ubuntu 18.04 and macOS Catalina, with limited testing on W
 The code requres 
 - `Python 3.6+`
 - The required Python packages can be installed via `pip install -r requirements.txt`
-- Download and uncompress [Stanford CoreNLP v3.9.2](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip). Newer versions may work, but they are not tested. Either [set the environment variable to the location of the uncompressed folder](https://stanfordnlp.github.io/stanfordnlp/corenlp_client.html), or edit the following line in the `global_options.py` to the location of the uncompressed folder, for example: 
+- Download and uncompress [Stanford CoreNLP v3.9.2](http://nlp.stanford.edu/software/stanford-corenlp-full-2018-10-05.zip). Newer versions may work, but they are not tested. Copy the. Uncompressed folder to the folder `standford_corenlp/`. Either [set the environment variable to the location of the uncompressed folder](https://stanfordnlp.github.io/stanfordnlp/corenlp_client.html), or edit the following line in the `global_options.py` to the location of the uncompressed folder, for example: 
 > os.environ["CORENLP_HOME"] = "/home/user/stanford-corenlp-full-2018-10-05/"   
 
 - If you are using Windows, use "/" instead of "\\" to separate directories.  
@@ -21,10 +21,10 @@ The code requres
     (['when[pos:WRB] I[pos:PRP] be[pos:VBD] a[pos:DT]....
 
 ## Data
-We included some example data in the `data/input/` folder. The three files are
-- `documents.txt`: Each line is a document (e.g., each earnings call). Each document needs to have line breaks remvoed. The file has no header row. 
-- `document_ids.txt`: Each line is document ID (e.g., unique identifier for each earnings call). A document ID cannot have `_` or whitespaces. The file has no header row. 
-- (Optional) `id2firms.csv`: A csv file with three columns (`document_id`:str, `firm_id`:str, `time`:int). The file has a header row. 
+Copy the yearly job posting data from HBS grid to `data/xml_df/` folder. The three files are
+- `JD_xml_{YEAR}.txt`: Each line is a document (e.g., each job posting). Each document needs to have line breaks remvoed. The file has no header row. 
+- `JobId_{YEAR}.txt`: Each line is document ID (e.g., unique identifier for each job posting). A document ID cannot have `_` or whitespaces. The file has no header row. 
+
 
 
 ## Before running the code
@@ -37,8 +37,8 @@ You can config global options in the `global_options.py`. The most important opt
 
 ## Running the code
 1. Use `python parse.py` to use Stanford CoreNLP to parse the raw documents. This step is relatvely slow so multiple CPU cores is recommended. The parsed files are output in the `data/processed/parsed/` folder:
-    - `documents.txt`: Each line is a *sentence*. 
-    - `document_sent_ids.txt`: Each line is a id in the format of `docID_sentenceID` (e.g. doc0_0, doc0_1, ..., doc1_0, doc1_1, doc1_2, ...). Each line in the file corresponds to `documents.txt`. 
+    - `Job_XML_{YEAR}.txt`: Each line is a *sentence*. 
+    - `JobIds_{YEAR}.txt`: Each line is a id in the format of `docID_sentenceID` (e.g. doc0_0, doc0_1, ..., doc1_0, doc1_1, doc1_2, ...). Each line in the file corresponds to `Job_XML_{YEAR}.txt`. 
     
     Note about performance: This step is time-consuming (~10 min for 100 calls). Using `python parse_parallel.py` can speed up the process considerably (~2 min with 8 cores for 100 calls) but it is not well-tested on all platforms. To not break things, the two implementations are separated. 
 

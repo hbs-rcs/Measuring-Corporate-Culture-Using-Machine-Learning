@@ -1,6 +1,6 @@
 import datetime
 import itertools
-import os
+import os, sys
 from pathlib import Path
 
 from stanfordnlp.server import CoreNLPClient
@@ -102,6 +102,7 @@ def process_largefile(
 
 
 if __name__ == "__main__":
+    YEAR = str(sys.argv[1])
     with CoreNLPClient(
         properties={
             "ner.applyFineGrained": "false",
@@ -110,18 +111,19 @@ if __name__ == "__main__":
         memory=global_options.RAM_CORENLP,
         threads=global_options.N_CORES,
         timeout=12000000,
+        endpoint="http://localhost:9000", 
         max_char_length=1000000,
     ) as client:
         corpus_preprocessor = preprocess.preprocessor(client)
-        in_file = Path(global_options.DATA_FOLDER, "input", "documents.txt")
+        in_file = Path(global_options.DATA_FOLDER, "xml_df", f"JD_xml_{YEAR}.txt")
         in_file_index = file_util.file_to_list(
-            Path(global_options.DATA_FOLDER, "input", "document_ids.txt")
+            Path(global_options.DATA_FOLDER, "xml_df", f"JobId_{YEAR}.txt")
         )
         out_file = Path(
-            global_options.DATA_FOLDER, "processed", "parsed", "documents.txt"
+            global_options.DATA_FOLDER, "processed", "parsed", f"Job_XML_{YEAR}.txt"
         )
         output_index_file = Path(
-            global_options.DATA_FOLDER, "processed", "parsed", "document_sent_ids.txt"
+            global_options.DATA_FOLDER, "processed", "parsed", f"JobIds_{YEAR}.txt"
         )
         process_largefile(
             input_file=in_file,
